@@ -10,7 +10,9 @@ class RAGService:
 
     def get_embedding(self, infos: list[str]):
         result = self.client.models.embed_content(
-            model=settings.GEMINI_EMBEDDING_MODEL, contents=infos
+            model=settings.GEMINI_EMBEDDING_MODEL,
+            contents=infos,
+            config={"output_dimensionality": 768},
         )
 
         return [embedding.values for embedding in result.embeddings]
