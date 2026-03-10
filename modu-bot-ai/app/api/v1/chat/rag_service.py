@@ -8,14 +8,18 @@ class RAGService:
         self.answer_model = settings.GEMINI_ANSWER_MODEL
         self.embedding_model = settings.GEMINI_EMBEDDING_MODEL
 
-    def get_embedding(self, infos: list[str]):
+    def get_embedding(self, text_or_list: str | list[str]):
+        input_data = [text_or_list] if isinstance(text_or_list, str) else text_or_list
+
         result = self.client.models.embed_content(
             model=settings.GEMINI_EMBEDDING_MODEL,
-            contents=infos,
+            contents=input_data,
             config={"output_dimensionality": 768},
         )
 
-        return [embedding.values for embedding in result.embeddings]
+        embeddings = [embedding.values for embedding in result.embeddings]
+
+        return embeddings[0] if isinstance(text_or_list, str) else embeddings
 
 
 rag_service = RAGService()
