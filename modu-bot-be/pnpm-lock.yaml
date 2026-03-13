@@ -50,6 +50,9 @@ importers:
       ethers:
         specifier: ^6.16.0
         version: 6.16.0
+      handlebars:
+        specifier: ^4.7.8
+        version: 4.7.8
       nodemailer:
         specifier: ^8.0.2
         version: 8.0.2
