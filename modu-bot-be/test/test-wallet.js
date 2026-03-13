@@ -1,5 +1,6 @@
 const { ethers } = require('ethers');
 
+// 테스트를 위한 임시 주소
 const PRIVATE_KEY =
   '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef';
 const wallet = new ethers.Wallet(PRIVATE_KEY);
