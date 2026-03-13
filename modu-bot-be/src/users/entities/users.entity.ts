@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 
 @Entity('users')
-export class User {
+export class Users {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -18,6 +18,14 @@ export class User {
     default: '',
   })
   name: string;
+
+  @Column({
+    type: 'varchar',
+    length: 100,
+    nullable: false,
+    unique: true,
+  })
+  email: string;
 
   @Column({
     type: 'varchar',
