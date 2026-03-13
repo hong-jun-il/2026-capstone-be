@@ -1,0 +1,25 @@
+# Package manager lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Test coverage output
+coverage/
+
+# Environment files
+.env
+.env.*
+
+# Log files
+*.log
+
+# Build output and modules
+node_modules/
+dist/
+build/
+
+# Database data
+postgres-data/
+
+# Specific configurations
+docker-compose.yaml
