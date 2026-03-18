@@ -72,9 +72,13 @@ export class BlockchainController {
 
   @UseGuards(AccessTokenGuard)
   @Post('nft/purchase')
-  async purchaseNft(@Body() body: { userAddress: string; index: number }) {
+  async purchaseNft(
+    @Body() body: { index: number },
+    @GetCurrentUserId() userId: string,
+  ) {
+    const user = await this.usersService.getUserById(userId);
     const receipt = await this.nftService.purchaseNftForUser(
-      body.userAddress,
+      user.walletAddress,
       body.index,
     );
     return {

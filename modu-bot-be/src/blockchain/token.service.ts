@@ -64,7 +64,7 @@ export class TokenService implements OnModuleInit {
     }
   }
 
-  // 테스트 유저 지갑으로 NFT 컨트랙트 승인 진행 (테스트용)
+  // 테스트 유저 지갑으로 NFT 컨트랙트 승인 진행 (테스트용) -> 추후 삭제 예정
   async approveByTestUser() {
     const nftContractAddress =
       this.configService.getOrThrow<string>('HS_NFT_ADDRESS');

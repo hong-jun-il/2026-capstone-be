@@ -11,7 +11,7 @@ console.log(wallet.address);
 console.log('=============================');
 
 // 테스트를 위한 임시 논스값
-const nonce = '525691';
+const nonce = '824940';
 
 // 서명 생성 함수
 async function makeSignature() {
