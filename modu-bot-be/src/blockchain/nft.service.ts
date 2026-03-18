@@ -59,8 +59,9 @@ export class NftService implements OnModuleInit, OnModuleDestroy {
   private readonly NFT_PRICE = '20';
 
   // NFT 판매 목록 조회 (DB 데이터 기반 + 블록체인 상태 실시간 동기화)
-  async getInventory() {
-    const metadataCid = this.configService.getOrThrow<string>('NFT_METADATA_CID');
+  async getNftGoods() {
+    const metadataCid =
+      this.configService.getOrThrow<string>('NFT_METADATA_CID');
     const imageCid = this.configService.getOrThrow<string>('NFT_IMAGE_CID');
     const gateway = 'https://ipfs.io/ipfs';
 
@@ -71,9 +72,9 @@ export class NftService implements OnModuleInit, OnModuleDestroy {
       // 2. 상위 5개 상품에 대해 DB 확인 및 생성
       const inventory: NftProduct[] = [];
       for (let i = 0; i < 5; i++) {
-        let product = await this.nftRepository.findOne({ 
+        let product = await this.nftRepository.findOne({
           where: { index: i },
-          relations: ['owner']
+          relations: ['owner'],
         });
 
         const isSoldOnChain = onChainStatus[i];
@@ -114,8 +115,11 @@ export class NftService implements OnModuleInit, OnModuleDestroy {
       );
 
       // 1. 유저 존재 여부 확인
-      const user = await this.userRepository.findOne({ where: { walletAddress: userAddress } });
-      if (!user) throw new Error('등록되지 않은 관리자 전용 테스트 유저입니다.');
+      const user = await this.userRepository.findOne({
+        where: { walletAddress: userAddress },
+      });
+      if (!user)
+        throw new Error('등록되지 않은 관리자 전용 테스트 유저입니다.');
 
       // 2. 블록체인 트랜잭션 전송
       const priceWei = ethers.parseEther(this.NFT_PRICE);
@@ -141,9 +145,15 @@ export class NftService implements OnModuleInit, OnModuleDestroy {
   }
 
   // 구매 완료 후 DB 업데이트 로직 분리
-  private async handleNftPurchase(buyerAddress: string, index: number, txHash: string) {
+  private async handleNftPurchase(
+    buyerAddress: string,
+    index: number,
+    txHash: string,
+  ) {
     try {
-      const user = await this.userRepository.findOne({ where: { walletAddress: buyerAddress } });
+      const user = await this.userRepository.findOne({
+        where: { walletAddress: buyerAddress },
+      });
       const product = await this.nftRepository.findOne({ where: { index } });
 
       if (user && product) {
@@ -166,9 +176,15 @@ export class NftService implements OnModuleInit, OnModuleDestroy {
       'NftPurchased',
       async (buyer, index, tokenId, price, event) => {
         try {
-          this.logger.log(`🔥 온체인 이벤트 감지: 구매자 ${buyer}, NFT #${index}`);
+          this.logger.log(
+            `🔥 온체인 이벤트 감지: 구매자 ${buyer}, NFT #${index}`,
+          );
           // 트랜잭션 해시는 event.log.transactionHash 등에 들어있음
-          await this.handleNftPurchase(buyer, Number(index), event.log.transactionHash);
+          await this.handleNftPurchase(
+            buyer,
+            Number(index),
+            event.log.transactionHash,
+          );
         } catch (error) {
           this.logger.error('이벤트 처리 중 오류:', error.message);
         }

@@ -4,6 +4,8 @@ import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
 import { NftService } from './nft.service';
 import { GetCurrentUserId } from 'src/common/decorators/get-current-user-id.decorator';
 import { UsersService } from 'src/users/users.service';
+import { plainToInstance } from 'class-transformer';
+import { NftGoodsResponseDto } from './dto/response-nftGoods.dto';
 
 @Controller('blockchain')
 export class BlockchainController {
@@ -47,9 +49,10 @@ export class BlockchainController {
   }
 
   @UseGuards(AccessTokenGuard)
-  @Get('nft/inventory')
+  @Get('nft/goods')
   async getInventory() {
-    return await this.nftService.getInventory();
+    const rawData = await this.nftService.getNftGoods();
+    return plainToInstance(NftGoodsResponseDto, rawData);
   }
 
   @Get('approve-test')
