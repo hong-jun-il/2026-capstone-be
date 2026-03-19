@@ -38,16 +38,6 @@ export class BlockchainController {
     };
   }
 
-  // 토큰 전송
-  @Post('transfer')
-  async transfer(@Body() body: { to: string; amount: string }) {
-    const txHash = await this.tokenService.transfer(body.to, body.amount);
-    return {
-      message: '토큰 전송이 완료되었습니다.',
-      txHash,
-    };
-  }
-
   @UseGuards(AccessTokenGuard)
   @Get('nft/goods')
   async getInventory() {
@@ -55,15 +45,7 @@ export class BlockchainController {
     return plainToInstance(NftGoodsResponseDto, rawData);
   }
 
-  @Get('approve-test')
-  async approveTest() {
-    const receipt = await this.tokenService.approveNftContract();
-    return {
-      message: '관리자 지갑의 토큰 사용 승인이 완료되었습니다.',
-      txHash: receipt.hash,
-    };
-  }
-
+  // 백엔드 테스트 용 -> 추후 삭제 예정
   @Get('approve-user-test')
   async approveUserTest() {
     const receipt = await this.tokenService.approveByTestUser();
