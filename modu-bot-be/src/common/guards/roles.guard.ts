@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { UsersRole } from '../../users/enum/user-role.enum';
 import { ROLES_KEY } from '../decorators/roles.decorator';
@@ -19,7 +24,7 @@ export class RolesGuard implements CanActivate {
     const { user } = context.switchToHttp().getRequest();
 
     if (!user || !user.role) {
-      return false;
+      throw new ForbiddenException('관리자 권한이 필요한 API입니다.');
     }
 
     return requiredRoles.includes(user.role);
