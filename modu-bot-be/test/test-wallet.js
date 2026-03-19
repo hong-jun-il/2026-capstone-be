@@ -1,8 +1,8 @@
+require('dotenv').config({ path: '.env.local' });
 const { ethers } = require('ethers');
 
 // 테스트를 위한 임시 주소
-const PRIVATE_KEY =
-  '9907ea00cc9e912ce18e054016f46e9e4267b98fc2562052267a497048842cf9';
+const PRIVATE_KEY = process.env.USER_PRIVATE_KEY;
 const wallet = new ethers.Wallet(PRIVATE_KEY);
 
 console.log('=============================');
@@ -11,7 +11,7 @@ console.log(wallet.address);
 console.log('=============================');
 
 // 테스트를 위한 임시 논스값
-const nonce = '824940';
+const nonce = '166253';
 
 // 서명 생성 함수
 async function makeSignature() {

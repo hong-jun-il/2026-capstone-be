@@ -178,7 +178,7 @@ export class NftService implements OnModuleInit, OnModuleDestroy {
 
   private async setupEventListeners() {
     this.nftContract.removeAllListeners('NftPurchased');
-    this.logger.log('NFT 이벤트 리스너 설정 완료 (NftPurchased)');
+    this.logger.log('HS NFT 이벤트 리스너 설정 완료 (NftPurchased)');
 
     this.nftContract.on(
       'NftPurchased',
