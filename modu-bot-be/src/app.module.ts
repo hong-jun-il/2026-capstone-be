@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { BlockchainModule } from './blockchain/blockchain.module';
+import { SeederModule } from './database/seeds/seeder.module';
 import typeorm from './config/typeorm';
 
 @Module({
@@ -25,6 +26,7 @@ import typeorm from './config/typeorm';
     AuthModule,
     MailModule,
     BlockchainModule,
+    SeederModule,
   ],
   controllers: [AppController],
   providers: [AppService],

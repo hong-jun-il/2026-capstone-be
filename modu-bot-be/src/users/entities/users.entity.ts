@@ -7,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { NftProduct } from 'src/blockchain/entities/nft-product.entity';
+import { UsersRole } from '../enum/user-role.enum';
 
 @Entity('users')
 export class Users {
@@ -51,6 +52,14 @@ export class Users {
     default: false,
   })
   isVerified: boolean; // 대학교 인증 여부
+
+  @Column({
+    type: 'enum',
+    enum: UsersRole,
+    nullable: false,
+    default: UsersRole.USER,
+  })
+  role: UsersRole;
 
   @Column({
     name: 'refresh_token',
