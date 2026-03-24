@@ -8,7 +8,7 @@ services:
     ports:
       - '5432:5432'
     env_file:
-      - .env.local
+      - .env.prod
   qdrant:
     image: qdrant/qdrant:latest
     container_name: modu-bot-qdrant
@@ -20,25 +20,21 @@ services:
       - ./qdrant_storage:/qdrant/storage:z
 
   backend:
-    build:
-      context: ./modu-bot-be
-      dockerfile: Dockerfile
+    image: woojo230/modu-bot-be:latest
     container_name: modu-bot-backend
     restart: always
     ports:
       - '3000:3000'
     env_file:
-      - .env.local
+      - .env.prod
     depends_on:
       - postgres
 
   ai:
-    build:
-      context: ./modu-bot-ai
-      dockerfile: dockerfile
+    image: woojo230/modu-bot-ai:latest
     container_name: modu-bot-ai
     restart: always
-    ports:
-      - '8000:8000'
+    # ports:
+    #   - '8000:8000'
     env_file:
-      - .env.local
+      - .env.prod

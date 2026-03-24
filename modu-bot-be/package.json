@@ -6,6 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "docker:up": "docker compose -f ../docker-compose.yml up -d",
+    "docker:down": "docker compose -f ../docker-compose.yml down",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
