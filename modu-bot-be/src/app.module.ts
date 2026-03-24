@@ -14,7 +14,7 @@ import typeorm from './config/typeorm';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env.local',
+      envFilePath: '../.env.local',
       load: [typeorm],
     }),
     TypeOrmModule.forRootAsync({
