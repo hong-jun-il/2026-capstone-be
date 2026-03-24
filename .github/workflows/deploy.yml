@@ -43,7 +43,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd ~/project # 프로젝트 경로 (EC2에 미리 폴더가 있어야 함)
-            docker-compose pull
-            docker-compose up -d
-            docker image prune -f # 오래된 이미지 정리
+            cd ~/project
+            docker-compose -f docker-compose.prod.yml pull
+            docker-compose -f docker-compose.prod.yml up -d
+            docker image prune -f
