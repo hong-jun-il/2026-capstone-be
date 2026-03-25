@@ -25,7 +25,10 @@ export class MailService {
       throw new NotFoundException('유저를 찾을 수 없습니다.');
     }
 
-    if (user.email !== targetEmail) {
+    const normalizedTarget = targetEmail.trim().toLowerCase();
+    const normalizedStored = user.email.trim().toLowerCase();
+
+    if (normalizedStored !== normalizedTarget) {
       throw new BadRequestException(
         '가입 시 입력한 이메일 주소와 일치하지 않습니다.',
       );
