@@ -45,7 +45,7 @@ jobs:
           script: |
             cd ~/project
             docker-compose -f docker-compose.prod.yml pull
-            docker-compose -f docker-compose.prod.yml up -d
             docker-compose -f docker-compose.prod.yml stop backend ai
             docker-compose -f docker-compose.prod.yml rm -f backend ai
+            docker-compose -f docker-compose.prod.yml up -d
             docker image prune -f
