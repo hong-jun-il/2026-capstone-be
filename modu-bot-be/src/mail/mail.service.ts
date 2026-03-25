@@ -2,22 +2,36 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  OnModuleInit,
 } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
-export class MailService {
+export class MailService implements OnModuleInit {
   // 추후 redis 로 바꿀 예정
   private verificationStore = new Map<
     string,
     { code: string; expiresAt: Date }
   >();
 
+  private gcInterval: NodeJS.Timeout;
+
   constructor(
     private readonly mailerService: MailerService,
     private readonly usersService: UsersService,
   ) {}
+
+  onModuleInit() {
+    this.gcInterval = setInterval(() => {
+      const now = new Date();
+      for (const [key, value] of this.verificationStore.entries()) {
+        if (now > value.expiresAt) {
+          this.verificationStore.delete(key);
+        }
+      }
+    }, 60_000);
+  }
 
   async sendVerificationCode(userId: string, targetEmail: string) {
     const user = await this.usersService.getUserById(userId);
@@ -25,7 +39,10 @@ export class MailService {
       throw new NotFoundException('유저를 찾을 수 없습니다.');
     }
 
-    if (user.email !== targetEmail) {
+    const normalizedTarget = targetEmail.trim().toLowerCase();
+    const normalizedStored = user.email.trim().toLowerCase();
+
+    if (normalizedStored !== normalizedTarget) {
       throw new BadRequestException(
         '가입 시 입력한 이메일 주소와 일치하지 않습니다.',
       );
