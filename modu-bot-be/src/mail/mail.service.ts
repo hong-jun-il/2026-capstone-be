@@ -2,22 +2,36 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  OnModuleInit,
 } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
-export class MailService {
+export class MailService implements OnModuleInit {
   // 추후 redis 로 바꿀 예정
   private verificationStore = new Map<
     string,
     { code: string; expiresAt: Date }
   >();
 
+  private gcInterval: NodeJS.Timeout;
+
   constructor(
     private readonly mailerService: MailerService,
     private readonly usersService: UsersService,
   ) {}
+
+  onModuleInit() {
+    this.gcInterval = setInterval(() => {
+      const now = new Date();
+      for (const [key, value] of this.verificationStore.entries()) {
+        if (now > value.expiresAt) {
+          this.verificationStore.delete(key);
+        }
+      }
+    }, 60_000);
+  }
 
   async sendVerificationCode(userId: string, targetEmail: string) {
     const user = await this.usersService.getUserById(userId);
