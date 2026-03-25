@@ -100,6 +100,7 @@ export class AuthService {
 
     const newUser = await this.userService.createUser({
       ...data,
+      email: data.email.trim().toLowerCase(),
       nonce,
     });
 
