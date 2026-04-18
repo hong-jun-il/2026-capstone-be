@@ -1,12 +1,13 @@
 import json
 import os
-from app.constants.config import settings
-from app.core.dependencies import get_rag_service, get_vector_db
+import uuid
+from app.core.dependencies import get_vector_db, get_rag_service
 from app.schemas.info_data import InfoDataType
 from app.schemas.vector import VectorPoint
 
-rag = get_rag_service()
+
 vdb = get_vector_db()
+rag_service = get_rag_service()
 
 
 def run_initial_seeding():
@@ -26,13 +27,18 @@ def run_initial_seeding():
     texts = [f"{data.title}: {data.content}" for data in data_list]
 
     try:
-        all_vectors = rag.get_embedding(texts)
+        all_vectors = rag_service.get_embedding(texts)
 
         upload_points = []
         for idx, data in enumerate(data_list):
+            auto_id = str(uuid.uuid4())
+
+            payload_without_id = data.model_dump(exclude={"id"})
 
             upload_points.append(
-                VectorPoint(id=data.id, vector=all_vectors[idx], payload=data)
+                VectorPoint(
+                    id=auto_id, vector=all_vectors[idx], payload=payload_without_id
+                )
             )
 
         vdb.upsert_data(upload_points)

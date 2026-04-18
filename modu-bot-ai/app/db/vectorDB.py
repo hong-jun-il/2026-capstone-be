@@ -49,14 +49,33 @@ class VectorDB:
             collection_name=self.collection_name,
             query=query,
             limit=limit,
-            with_payload=True,  # 텍스트 내용도 같이 가져옴
+            with_payload=True,
         ).points
 
-    # 저장된 모든 정보들을 조회합니다
-    def get_all_infos(self):
-        response, _ = self.client.scroll(
+    # 무한 스크롤을 위한 카테고리별 데이터 조회
+    def get_category_infos_scroll(
+        self, category_name: str, limit: int = 50, offset: str | int | None = None
+    ):
+        records, next_offset = self.client.scroll(
             collection_name=self.collection_name,
+            scroll_filter=models.Filter(
+                must=[
+                    models.FieldCondition(
+                        key="category",
+                        match=models.MatchValue(value=category_name),
+                    )
+                ]
+            ),
+            limit=limit,
+            offset=offset,
             with_payload=True,
             with_vectors=False,
         )
-        return [point.payload for point in response]
+
+        infos = []
+        for record in records:
+            item = dict(record.payload)
+            item["id"] = record.id
+            infos.append(item)
+
+        return {"infos": infos, "next_offset": next_offset}
